@@ -11,7 +11,6 @@ import pages.CheckoutPage;
 import pages.LoginPage;
 import pages.ProductsPage;
 import plugins.listener.TestListener;
-
 import java.time.Duration;
 import java.util.HashMap;
 
@@ -35,18 +34,14 @@ public class BaseTest {
             options.addArguments("--incognito", "--disable-notifications",
                     "--disable-popup-blocking", "--disable-infobars");
             driver = new ChromeDriver(options);
-
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions options = new FirefoxOptions();
             options.addArguments("--private");
             options.addPreference("dom.webnotifications.enabled", false);
             driver = new FirefoxDriver(options);
         }
-
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-        // Инициализация page objects
         loginPage = new LoginPage(driver);
         productsPage = new ProductsPage(driver);
         cartPage = new CartPage(driver);
