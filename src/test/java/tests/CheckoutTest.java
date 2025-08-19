@@ -1,12 +1,13 @@
 package tests;
 
+import plugins.retry.RetryAnalyzer;
 import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 
 public class CheckoutTest extends BaseTest {
 
-    @Test
+    @Test(testName = "Позитивный тест страницы оплаты", description = "Проверка перехода на страницу оплаты",
+            retryAnalyzer = RetryAnalyzer.class)
     public void checkСheckoutPageIsOpened() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
@@ -18,7 +19,8 @@ public class CheckoutTest extends BaseTest {
                 "Открытие чекаута не выполнено");
     }
 
-    @Test
+    @Test(testName = "Позитивный тест оплаты", description = "Проверка оплаты пользователем",
+            retryAnalyzer = RetryAnalyzer.class)
     public void checkPositiveСheckout() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");

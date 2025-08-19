@@ -1,11 +1,13 @@
 package tests;
 
+import plugins.retry.RetryAnalyzer;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 public class LocatorsTest extends BaseTest {
 
-    @Test
+    @Test(testName = "Тест локаторов сайта", description = "Прверка локаторов",
+            retryAnalyzer = RetryAnalyzer.class)
     public void checkLocators() {
         driver.get("https://www.saucedemo.com/");
         driver.findElement(By.id("user-name"));

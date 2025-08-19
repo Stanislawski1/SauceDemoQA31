@@ -2,7 +2,14 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.DataProvider;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ProductsPage extends BasePage {
 
@@ -19,7 +26,22 @@ public class ProductsPage extends BasePage {
     }
 
     public void isPageOpened() {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[text()='Products']")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Products']")));
+    }
+
+    public void sortingFilters(String filterOption) {
+        By filterDropdownLocator = By.className("product_sort_container");
+        Select filterDropdown = new Select(driver.findElement(filterDropdownLocator));
+        filterDropdown.selectByVisibleText(filterOption);
+    }
+
+    public String getFirstProductTitle() {
+        By productNameLocator = By.className("inventory_item_name");
+        List<WebElement> productNames = driver.findElements(productNameLocator);
+        if (productNames.isEmpty()) {
+            throw new NoSuchElementException("No products found on the page");
+        }
+        return productNames.get(0).getText();
     }
 
     public String getTitle() {

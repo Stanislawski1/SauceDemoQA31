@@ -1,5 +1,6 @@
 package tests;
 
+import plugins.retry.RetryAnalyzer;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -7,7 +8,8 @@ import static org.testng.Assert.assertFalse;
 
 public class CartTest extends BaseTest {
 
-    @Test
+    @Test(testName = "Тест открытия страницы корзины", description = "Прверка открытия страницы корзины",
+            retryAnalyzer = RetryAnalyzer.class)
     public void checkCartIsOpened() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
@@ -19,7 +21,8 @@ public class CartTest extends BaseTest {
                 "Открытие корзины не выполнено");
     }
 
-    @Test
+    @Test(testName = "Тест кнопки удаления", description = "Проверка удаления выбранного товара",
+            retryAnalyzer = RetryAnalyzer.class)
     public void checkItemIsRemoved() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
@@ -30,8 +33,8 @@ public class CartTest extends BaseTest {
         assertFalse(cartPage.isItemDisplayed("sauce-labs-bolt-t-shirt"));
     }
 
-
-    @Test
+    @Test(testName = "Тест возвращения на страницу товаров", description = "Проверка возвращения на страницу товаров",
+            retryAnalyzer = RetryAnalyzer.class)
     public void checkContinueShopping() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
