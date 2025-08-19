@@ -12,7 +12,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
             retryCount++;
             System.out.println("Retrying test " + result.getName() +
                     " for the " + retryCount + " time");
-            return true; // Пытаемся снова
+            return true;
         }
         return false;
     }
