@@ -21,8 +21,7 @@ public class CheckoutTest extends BaseTest {
     @Test(testName = "Позитивный тест страницы оплаты", description = "Проверка перехода на страницу оплаты",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkСheckoutPageIsOpened() {
-        loginPage.open();
-        loginPage.login("standard_user", "secret_sauce");
+        loginStep.auth("standard_user","secret_sauce");
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.open();
         cartPage.checkout();

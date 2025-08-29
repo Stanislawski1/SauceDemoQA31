@@ -15,24 +15,29 @@ public class CartPage extends BasePage {
         super(driver);
     }
 
-    public void open() {
+    public CartPage open() {
         driver.get(BASE_URL + "cart.html");
+        return this;
     }
 
-    public void checkout() {
+    public CheckoutPage checkout() {
         driver.findElement(CHECKOUT).click();
+        return new CheckoutPage(driver);
     }
 
-    public WebElement remove(String itemId) {
-        return driver.findElement(By.id("remove-" + itemId));
+    public CartPage remove(String itemId) {
+         driver.findElement(By.id("remove-" + itemId));
+        return this;
     }
 
-    public void continueShopping() {
+    public ProductsPage continueShopping() {
         driver.findElement(CONTINUE_SHOPPING_BUTTON).click();
+        return new ProductsPage(driver);
     }
 
-    public String getTitle() {
-        return driver.findElement(TITLE).getText();
+    public CartPage getTitle() {
+         driver.findElement(TITLE).getText();
+        return this;
     }
 
     public boolean isItemDisplayed(String itemId) {

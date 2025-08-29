@@ -23,11 +23,9 @@ public class LoginTest extends BaseTest {
     @Test(testName = "Позитивный тест логина", description = "Проверка входа в аккаунт с валидными данными",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkPositiveLogin() {
-        loginPage.open();
-        loginPage.login("standard_user", "secret_sauce");
-        assertEquals(productsPage.getTitle(),
-                "Product",
-                "Логин не выполнен");
+        loginStep.auth("standard_user","secret_sauce");
+        loginStep.testWithPositiveCred();
+
     }
 
     @Owner("Stanislaw")
@@ -43,11 +41,8 @@ public class LoginTest extends BaseTest {
     @Test(testName = "Негативный тест логина", description = "Проверка входа пользователя с пустым паролем",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkLoginWithEmptyPassword() {
-        loginPage.open();
-        loginPage.login("standard_user", "");
-        assertEquals(loginPage.getErrorMessage(),
-                "Epic sadface: Password is required",
-                "Сообщение об ошибке не соответствует");
+        loginStep.auth("standard_user","");
+        loginStep.testWithEmptyPassword();
     }
 
 
@@ -64,11 +59,8 @@ public class LoginTest extends BaseTest {
     @Test(testName = "Негативный тест логина", description = "Проверка входа пользователя с именем пользователя",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkLoginWithEmptyUsername() {
-        loginPage.open();
-        loginPage.login("", "secret_sauce");
-        assertEquals(loginPage.getErrorMessage(),
-                "Epic sadface: Username is required",
-                "Сообщение об ошибке не соответствует");
+        loginStep.auth("","secret_sauce");
+        loginStep.testWithEmptyUsername();
     }
 
     @Owner("Stanislaw")
@@ -84,11 +76,8 @@ public class LoginTest extends BaseTest {
     @Test(testName = "Негативный тест логина", description = "Проверка входа пользователя с тестовыми данными",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkLoginWithTestCred() {
-        loginPage.open();
-        loginPage.login("test", "test");
-        assertEquals(loginPage.getErrorMessage(),
-                "Epic sadface: Username and password do not match any user in this service",
-                "Сообщение об ошибке не соответствует");
+        loginStep.auth("test","test");
+        loginStep.testWithTestCred();
 
     }
 

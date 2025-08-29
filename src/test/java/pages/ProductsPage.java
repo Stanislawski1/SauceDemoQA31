@@ -9,9 +9,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.DataProvider;
 import plugins.allure.AllureUtils;
+import tests.CartTest;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.testng.Assert.assertEquals;
 
 public class ProductsPage extends BasePage {
 
@@ -19,29 +22,37 @@ public class ProductsPage extends BasePage {
     private final String ADD_TO_CART_PATTERN = "//*[text()='%s']/ancestor::div[@class='inventory_item']" +
             "//button[text()='Add to cart']";
 
+    ProductsPage productsPage;
+
     public ProductsPage(WebDriver driver) {
         super(driver);
+
     }
 
     @Step("Открытие страницы продуктов")
-    public void open() {
+    public ProductsPage open() {
         driver.get(BASE_URL + "inventory.html");
         AllureUtils.takeScreenshot(driver);
+        return this;
     }
+
+
 
 
     @Step("Проверка открытия страницы продуктов")
-    public void isPageOpened() {
+    public ProductsPage isPageOpened() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Products']")));
         AllureUtils.takeScreenshot(driver);
+        return this;
     }
 
     @Step("Нажатие кнопки сортировки")
-    public void sortingFilters(String filterOption) {
+    public ProductsPage sortingFilters(String filterOption) {
         By filterDropdownLocator = By.className("product_sort_container");
         Select filterDropdown = new Select(driver.findElement(filterDropdownLocator));
         filterDropdown.selectByVisibleText(filterOption);
         AllureUtils.takeScreenshot(driver);
+        return this;
     }
 
     @Step("Проверка первого товара после сортировки")
@@ -56,13 +67,16 @@ public class ProductsPage extends BasePage {
 
     }
 
+
+
     public String getTitle() {
         return driver.findElement(TITLE).getText();
     }
 
     @Step("Добавление товара с именем: '{product}' в корзину и нажатие на кнопку")
-    public void addToCart(String product) {
+    public CartTest addToCart(String product) {
         driver.findElement(By.xpath(String.format(ADD_TO_CART_PATTERN, product))).click();
         AllureUtils.takeScreenshot(driver);
+        return new CartTest();
     }
 }

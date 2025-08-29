@@ -14,6 +14,10 @@ import pages.LoginPage;
 import pages.ProductsPage;
 import plugins.allure.AllureUtils;
 import plugins.listener.TestListener;
+import steps.CartStep;
+import steps.LoginStep;
+import steps.ProductStep;
+
 import java.time.Duration;
 import java.util.HashMap;
 
@@ -24,6 +28,9 @@ public class BaseTest {
     protected ProductsPage productsPage;
     protected CartPage cartPage;
     protected CheckoutPage checkoutPage;
+    protected LoginStep loginStep;
+    protected ProductStep productStep;
+    protected CartStep cartStep;
 
     @Parameters({"browser"})
     @BeforeMethod
@@ -52,6 +59,9 @@ public class BaseTest {
         productsPage = new ProductsPage(driver);
         cartPage = new CartPage(driver);
         checkoutPage = new CheckoutPage(driver);
+        loginStep = new LoginStep(driver);
+        productStep = new ProductStep(driver);
+        cartStep = new CartStep(driver);
     }
 
     @AfterMethod
