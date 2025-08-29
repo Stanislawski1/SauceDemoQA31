@@ -1,4 +1,4 @@
-package plugins.providers;
+package data_test;
 
 public class DataProvider{
     @org.testng.annotations.DataProvider(name = "filters")

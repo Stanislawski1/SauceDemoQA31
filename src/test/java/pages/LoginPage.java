@@ -1,8 +1,10 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import plugins.allure.AllureUtils;
 
 public class LoginPage extends BasePage {
 
@@ -20,12 +22,14 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(LOGIN_BUTTON));
     }
 
+    @Step("Вход в магазин с именем '{user}' и паролем '{password}'")
     public void login(String user, String password) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(USERNAME_INPUT));
         driver.findElement(USERNAME_INPUT).sendKeys(user);
         wait.until(ExpectedConditions.visibilityOfElementLocated(PASSWORD));
         driver.findElement(PASSWORD).sendKeys(password);
         driver.findElement(LOGIN_BUTTON).click();
+        AllureUtils.takeScreenshot(driver);
     }
 
     public String getErrorMessage() {

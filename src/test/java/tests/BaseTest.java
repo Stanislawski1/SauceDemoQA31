@@ -5,11 +5,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 import pages.CartPage;
 import pages.CheckoutPage;
 import pages.LoginPage;
 import pages.ProductsPage;
+import plugins.allure.AllureUtils;
 import plugins.listener.TestListener;
 import java.time.Duration;
 import java.util.HashMap;
@@ -24,7 +27,7 @@ public class BaseTest {
 
     @Parameters({"browser"})
     @BeforeMethod
-    public void setup(@Optional("chrome") String browser) {
+    public void setup(@Optional("chrome") String browser, ITestContext context) {
         if (browser.equalsIgnoreCase("chrome")) {
             ChromeOptions options = new ChromeOptions();
             HashMap<String, Object> chromePrefs = new HashMap<>();
@@ -40,6 +43,9 @@ public class BaseTest {
             options.addPreference("dom.webnotifications.enabled", false);
             driver = new FirefoxDriver(options);
         }
+
+        context.setAttribute("driver", driver);
+
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         loginPage = new LoginPage(driver);
@@ -49,9 +55,10 @@ public class BaseTest {
     }
 
     @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+    public void tearDown(ITestResult result) {
+        if (ITestResult.FAILURE == result.getStatus()) {
+            AllureUtils.takeScreenshot(driver);
         }
+        driver.quit();
     }
 }
