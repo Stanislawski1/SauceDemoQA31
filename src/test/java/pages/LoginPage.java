@@ -28,8 +28,6 @@ public class LoginPage extends BasePage {
         return this;
     }
 
-
-
     @Step("Вход в магазин с именем '{user}' и паролем '{password}'")
     public ProductsPage login(String user, String password) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(USERNAME_INPUT));

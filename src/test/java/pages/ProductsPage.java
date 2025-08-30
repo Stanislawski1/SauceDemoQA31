@@ -67,16 +67,14 @@ public class ProductsPage extends BasePage {
 
     }
 
-
-
     public String getTitle() {
         return driver.findElement(TITLE).getText();
     }
 
     @Step("Добавление товара с именем: '{product}' в корзину и нажатие на кнопку")
-    public CartTest addToCart(String product) {
+    public ProductsPage addToCart(String product) {
         driver.findElement(By.xpath(String.format(ADD_TO_CART_PATTERN, product))).click();
         AllureUtils.takeScreenshot(driver);
-        return new CartTest();
+        return this;
     }
 }

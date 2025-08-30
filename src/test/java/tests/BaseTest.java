@@ -15,6 +15,7 @@ import pages.ProductsPage;
 import plugins.allure.AllureUtils;
 import plugins.listener.TestListener;
 import steps.CartStep;
+import steps.CheckOutStep;
 import steps.LoginStep;
 import steps.ProductStep;
 
@@ -31,6 +32,7 @@ public class BaseTest {
     protected LoginStep loginStep;
     protected ProductStep productStep;
     protected CartStep cartStep;
+    protected CheckOutStep checkOutStep;
 
     @Parameters({"browser"})
     @BeforeMethod
@@ -62,6 +64,7 @@ public class BaseTest {
         loginStep = new LoginStep(driver);
         productStep = new ProductStep(driver);
         cartStep = new CartStep(driver);
+        checkOutStep = new CheckOutStep(driver);
     }
 
     @AfterMethod

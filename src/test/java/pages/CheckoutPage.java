@@ -16,11 +16,12 @@ public class CheckoutPage extends BasePage {
         super(driver);
     }
 
-    public void open() {
+    public CheckoutPage open() {
         driver.get(BASE_URL + "checkout-step-one.html");
+        return this;
     }
 
-    public void enterInfo(String first_name, String last_name, String zip) {
+    public ProductsPage enterInfo(String first_name, String last_name, String zip) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(FIRST_NAME));
         driver.findElement(FIRST_NAME).sendKeys(first_name);
         wait.until(ExpectedConditions.visibilityOfElementLocated(LAST_NAME));
@@ -28,9 +29,11 @@ public class CheckoutPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(POSTAL_CODE));
         driver.findElement(POSTAL_CODE).sendKeys(zip);
         driver.findElement(CONTINUE_BUTTON).click();
+        return new ProductsPage(driver);
     }
 
     public String getTitle() {
         return driver.findElement(TITLE).getText();
+
     }
 }

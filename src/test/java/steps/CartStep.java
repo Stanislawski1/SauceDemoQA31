@@ -13,7 +13,6 @@ public class CartStep {
     ProductsPage productsPage;
     CartPage cartPage;
 
-
     public CartStep(WebDriver driver) {
         this.driver = driver;
         productsPage = new ProductsPage(driver);
@@ -21,8 +20,8 @@ public class CartStep {
     }
 
     public void cartIsOpened() {
-        productsPage.addToCart("Sauce Labs Backpack");
-        productsPage.addToCart("Sauce Labs Bolt T-Shirt");
+        productsPage.addToCart("Sauce Labs Backpack")
+                        .addToCart("Sauce Labs Bolt T-Shirt");
         cartPage.open();
         assertEquals(cartPage.getTitle(),
                 "Your Cart",
@@ -33,6 +32,4 @@ public class CartStep {
         cartPage.remove("sauce-labs-bolt-t-shirt");
         assertFalse(cartPage.isItemDisplayed("sauce-labs-bolt-t-shirt"));
     }
-
-
 }

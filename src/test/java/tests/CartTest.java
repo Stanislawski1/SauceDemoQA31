@@ -10,7 +10,6 @@ import static org.testng.Assert.assertFalse;
 
 public class CartTest extends BaseTest {
 
-
     @Owner("Stanislaw")
     @Link("")
     @Description("Тест проверки страницы корзины")
@@ -29,7 +28,6 @@ public class CartTest extends BaseTest {
 
     }
 
-
     @Owner("Stanislaw")
     @Link("")
     @Description("Тест кнопки удаления")
@@ -47,7 +45,6 @@ public class CartTest extends BaseTest {
         cartStep.cartIsOpened();
         cartStep.checkRemoveButton();
     }
-
 
     @Owner("Stanislaw")
     @Link("")

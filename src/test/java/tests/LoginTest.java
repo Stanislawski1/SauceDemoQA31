@@ -9,7 +9,6 @@ import static org.testng.Assert.assertEquals;
 
 public class LoginTest extends BaseTest {
 
-
     @Owner("Stanislaw")
     @Link("")
     @Description("Проверка входа в аккаунт с валидными данными")
@@ -44,7 +43,6 @@ public class LoginTest extends BaseTest {
         loginStep.auth("standard_user","");
         loginStep.testWithEmptyPassword();
     }
-
 
     @Owner("Stanislaw")
     @Link("")

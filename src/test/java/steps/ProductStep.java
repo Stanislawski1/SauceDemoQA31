@@ -26,11 +26,10 @@ public class ProductStep {
 
     public void checkContinue() {
         productsPage.addToCart("Sauce Labs Backpack");
-        cartPage.open();
-        cartPage.continueShopping();
+        cartPage.open()
+                .continueShopping();
         assertEquals(productsPage.getTitle(),
                 "Products",
                 "Возвращение на страницу товаров не выполнено");
     }
-
 }
