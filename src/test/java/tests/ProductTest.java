@@ -21,10 +21,9 @@ public class ProductTest extends BaseTest {
     @Test(testName = "Вход на страницу товаров", description = "Провекрка входа на страницу товаров",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkProductPage() {
-        loginPage.open();
-        loginPage.login("standard_user", "secret_sauce");
-        productsPage.open();
-        productsPage.isPageOpened();
+        loginStep.auth("standard_user", "secret_sauce");
+        productsPage.open()
+                .isPageOpened();
     }
 
     @Test(testName = "Проверка фильтрации продуктов", dataProvider = "filters", dataProviderClass = DataProvider.class,
@@ -41,12 +40,8 @@ public class ProductTest extends BaseTest {
     @Issue("SD_01/1") // Ссылка на баг репорт
 
     public void checkSorting(String filterOption, String expectedFirstItem) {
-        loginPage.open();
-        loginPage.login("standard_user", "secret_sauce");
-        productsPage.sortingFilters(filterOption);
-        String actualFirstItem = productsPage.getFirstProductTitle();
-        assertEquals(actualFirstItem, expectedFirstItem,
-                "Первый товар после сортировки '" + filterOption + "' не совпадает");
+        loginStep.auth("standard_user", "secret_sauce");
+        productStep.sorting(filterOption, expectedFirstItem);
     }
 }
 

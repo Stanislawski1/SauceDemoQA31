@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -14,6 +16,11 @@ import pages.LoginPage;
 import pages.ProductsPage;
 import plugins.allure.AllureUtils;
 import plugins.listener.TestListener;
+import steps.CartStep;
+import steps.CheckOutStep;
+import steps.LoginStep;
+import steps.ProductStep;
+
 import java.time.Duration;
 import java.util.HashMap;
 
@@ -24,6 +31,11 @@ public class BaseTest {
     protected ProductsPage productsPage;
     protected CartPage cartPage;
     protected CheckoutPage checkoutPage;
+    protected LoginStep loginStep;
+    protected ProductStep productStep;
+    protected CartStep cartStep;
+    protected CheckOutStep checkOutStep;
+
 
     @Parameters({"browser"})
     @BeforeMethod
@@ -52,6 +64,10 @@ public class BaseTest {
         productsPage = new ProductsPage(driver);
         cartPage = new CartPage(driver);
         checkoutPage = new CheckoutPage(driver);
+        loginStep = new LoginStep(driver);
+        productStep = new ProductStep(driver);
+        cartStep = new CartStep(driver);
+        checkOutStep = new CheckOutStep(driver);
     }
 
     @AfterMethod

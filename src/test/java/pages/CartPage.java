@@ -4,38 +4,56 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CartPage extends BasePage {
 
-    private final By CHECKOUT = By.id("checkout");
-    private final By CONTINUE_SHOPPING_BUTTON = By.id("continue-shopping");
-    private final By TITLE = By.className("title");
+    private static final Logger logger = LoggerFactory.getLogger(CartPage.class);
+
+    @FindBy(id = "checkout")
+    private WebElement CHECKOUT;
+    @FindBy(id = "continue-shopping")
+    private WebElement CONTINUE_SHOPPING_BUTTON;
+    @FindBy(className ="title" )
+    private WebElement TITLE;
 
     public CartPage(WebDriver driver) {
         super(driver);
     }
 
-    public void open() {
+    public CartPage open() {
+        logger.info("Открытие страницы корзины");
         driver.get(BASE_URL + "cart.html");
+        return this;
     }
 
-    public void checkout() {
-        driver.findElement(CHECKOUT).click();
+    public CheckoutPage checkout() {
+        logger.info("Нажатие на кнопку оплаты");
+        CHECKOUT.click();
+        return new CheckoutPage(driver);
     }
 
-    public WebElement remove(String itemId) {
-        return driver.findElement(By.id("remove-" + itemId));
+    public CartPage remove(String itemId) {
+        logger.info("Удаление товара");
+         driver.findElement(By.id("remove-" + itemId));
+        return this;
     }
 
-    public void continueShopping() {
-        driver.findElement(CONTINUE_SHOPPING_BUTTON).click();
+    public ProductsPage continueShopping() {
+        logger.info("Нажатие на кнопку 'Продолжить покупку'");
+        CONTINUE_SHOPPING_BUTTON.click();
+        return new ProductsPage(driver);
     }
 
-    public String getTitle() {
-        return driver.findElement(TITLE).getText();
+    public CartPage getTitle() {
+        TITLE.click();
+        return this;
     }
 
     public boolean isItemDisplayed(String itemId) {
+        logger.info("Проверка изображения товара");
         try {
             return driver.findElement(By.id(itemId)).isDisplayed();
         } catch (NoSuchElementException e) {
