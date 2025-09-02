@@ -1,6 +1,10 @@
 package tests;
 
 import io.qameta.allure.*;
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pages.LoginPage;
 import plugins.retry.RetryAnalyzer;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -8,6 +12,9 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class LoginTest extends BaseTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginTest.class);
+
 
     @Owner("Stanislaw")
     @Link("")
@@ -22,6 +29,7 @@ public class LoginTest extends BaseTest {
     @Test(testName = "Позитивный тест логина", description = "Проверка входа в аккаунт с валидными данными",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkPositiveLogin() {
+        logger.info("Тест с позитивными кредами");
         loginStep.auth("standard_user","secret_sauce");
         loginStep.testWithPositiveCred();
 

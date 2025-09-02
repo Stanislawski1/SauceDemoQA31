@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -33,6 +35,7 @@ public class BaseTest {
     protected ProductStep productStep;
     protected CartStep cartStep;
     protected CheckOutStep checkOutStep;
+
 
     @Parameters({"browser"})
     @BeforeMethod

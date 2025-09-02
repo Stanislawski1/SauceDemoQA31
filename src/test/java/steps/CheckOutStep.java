@@ -1,6 +1,8 @@
 package steps;
 
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pages.CartPage;
 import pages.CheckoutPage;
 import pages.ProductsPage;
@@ -8,6 +10,8 @@ import pages.ProductsPage;
 import static org.testng.Assert.assertEquals;
 
 public class CheckOutStep {
+
+    private static final Logger logger = LoggerFactory.getLogger(CheckOutStep.class);
 
     WebDriver driver;
     ProductsPage productsPage;
@@ -22,6 +26,7 @@ public class CheckOutStep {
     }
 
     public void isOpened() {
+        logger.info("Проверка открытия страницы оплаты");
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.open()
                 .checkout();
@@ -31,6 +36,7 @@ public class CheckOutStep {
     }
 
     public void testPositiveCheckout() {
+        logger.info("Проверка оплаты с позитивными данными");
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.open()
                 .checkout();

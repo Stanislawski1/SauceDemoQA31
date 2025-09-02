@@ -39,9 +39,9 @@ public class ProductTest extends BaseTest {
     @TmsLink("SD-01") // Ссылка на Quase
     @Issue("SD_01/1") // Ссылка на баг репорт
 
-    public void checkSorting() {
+    public void checkSorting(String filterOption, String expectedFirstItem) {
         loginStep.auth("standard_user", "secret_sauce");
-        productStep.sorting("s","s");
+        productStep.sorting(filterOption, expectedFirstItem);
     }
 }
 

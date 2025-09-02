@@ -19,6 +19,7 @@ public class ProductStep {
     }
 
     public void sorting(String filterOption, String expectedFirstItem) {
+        productsPage.sortingFilters(filterOption);
         String actualFirstItem = productsPage.getFirstProductTitle();
         assertEquals(actualFirstItem, expectedFirstItem,
                 "Первый товар после сортировки '" + filterOption + "' не совпадает");

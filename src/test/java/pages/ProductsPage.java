@@ -4,9 +4,12 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 import plugins.allure.AllureUtils;
 import tests.CartTest;
@@ -18,20 +21,23 @@ import static org.testng.Assert.assertEquals;
 
 public class ProductsPage extends BasePage {
 
-    private final By TITLE = By.className("title");
-    private final String ADD_TO_CART_PATTERN = "//*[text()='%s']/ancestor::div[@class='inventory_item']" +
-            "//button[text()='Add to cart']";
+    private static final Logger logger = LoggerFactory.getLogger(ProductsPage.class);
 
-    ProductsPage productsPage;
+    @FindBy(className = "title")
+    private WebElement TITLE;
+    @FindBy(xpath = "//*[text()='%s']/ancestor::div[@class='inventory_item']//button[text()='Add to cart']")
+    private WebElement ADD_TO_CART_PATTERN;
+
 
     public ProductsPage(WebDriver driver) {
         super(driver);
-
+        PageFactory.initElements(driver, this);
     }
 
     @Step("Открытие страницы продуктов")
     public ProductsPage open() {
         driver.get(BASE_URL + "inventory.html");
+        logger.info("Открытите страницы продуктов");
         AllureUtils.takeScreenshot(driver);
         return this;
     }
@@ -42,6 +48,7 @@ public class ProductsPage extends BasePage {
     @Step("Проверка открытия страницы продуктов")
     public ProductsPage isPageOpened() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Products']")));
+        logger.info("Проверка открытия страницы продуктов");
         AllureUtils.takeScreenshot(driver);
         return this;
     }
@@ -51,6 +58,7 @@ public class ProductsPage extends BasePage {
         By filterDropdownLocator = By.className("product_sort_container");
         Select filterDropdown = new Select(driver.findElement(filterDropdownLocator));
         filterDropdown.selectByVisibleText(filterOption);
+        logger.info("Нажатие на кнопку сортировки");
         AllureUtils.takeScreenshot(driver);
         return this;
     }
@@ -62,18 +70,19 @@ public class ProductsPage extends BasePage {
         if (productNames.isEmpty()) {
             throw new NoSuchElementException("No products found on the page");
         }
+        logger.info("Проверка первого товара после сортировки");
         AllureUtils.takeScreenshot(driver);
         return productNames.get(0).getText();
-
     }
 
     public String getTitle() {
-        return driver.findElement(TITLE).getText();
+        return TITLE.getText();
     }
 
     @Step("Добавление товара с именем: '{product}' в корзину и нажатие на кнопку")
     public ProductsPage addToCart(String product) {
-        driver.findElement(By.xpath(String.format(ADD_TO_CART_PATTERN, product))).click();
+        driver.findElement(By.xpath(String.format(product, ADD_TO_CART_PATTERN))).click();
+        logger.info("Добавление товара в корзину и нажатие кнопки");
         AllureUtils.takeScreenshot(driver);
         return this;
     }
