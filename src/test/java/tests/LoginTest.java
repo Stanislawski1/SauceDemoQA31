@@ -30,7 +30,7 @@ public class LoginTest extends BaseTest {
             retryAnalyzer = RetryAnalyzer.class)
     public void checkPositiveLogin() {
         logger.info("Тест с позитивными кредами");
-        loginStep.auth("standard_user","secret_sauce");
+        loginStep.auth(user,password);
         loginStep.testWithPositiveCred();
 
     }
