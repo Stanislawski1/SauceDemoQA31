@@ -3,7 +3,6 @@ package tests;
 import io.qameta.allure.*;
 import plugins.retry.RetryAnalyzer;
 import org.testng.annotations.Test;
-import steps.CheckOutStep;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,7 +20,7 @@ public class CheckoutTest extends BaseTest {
     @Issue("SD_01/1")
     @Test(testName = "Позитивный тест страницы оплаты", description = "Проверка перехода на страницу оплаты",
             retryAnalyzer = RetryAnalyzer.class)
-    public void checkСheckoutPageIsOpened() {
+    public void checkCheckoutPageIsOpened() {
         loginStep.auth("standard_user","secret_sauce");
         checkOutStep.isOpened();
     }
@@ -38,7 +37,7 @@ public class CheckoutTest extends BaseTest {
     @Issue("SD_01/1")
     @Test(testName = "Позитивный тест оплаты", description = "Проверка оплаты пользователем",
             retryAnalyzer = RetryAnalyzer.class)
-    public void checkPositiveСheckout() {
+    public void checkPositiveCheckout() {
         loginStep.auth("standard_user","secret_sauce");
         checkOutStep.testPositiveCheckout();
     }
