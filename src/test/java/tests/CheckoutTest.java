@@ -21,7 +21,7 @@ public class CheckoutTest extends BaseTest {
     @Test(testName = "Позитивный тест страницы оплаты", description = "Проверка перехода на страницу оплаты",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkCheckoutPageIsOpened() {
-        loginStep.auth("standard_user","secret_sauce");
+        loginStep.auth(user,password);
         checkOutStep.isOpened();
     }
 
@@ -38,7 +38,7 @@ public class CheckoutTest extends BaseTest {
     @Test(testName = "Позитивный тест оплаты", description = "Проверка оплаты пользователем",
             retryAnalyzer = RetryAnalyzer.class)
     public void checkPositiveCheckout() {
-        loginStep.auth("standard_user","secret_sauce");
+        loginStep.auth(user,password);
         checkOutStep.testPositiveCheckout();
     }
 }
