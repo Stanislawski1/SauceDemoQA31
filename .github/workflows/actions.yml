@@ -43,11 +43,14 @@ jobs:
           if [ -d "target/site/allure-maven-plugin" ]; then
             echo "✓ Allure report generated"
             echo "Files found: $(find target/site/allure-maven-plugin -type f | wc -l)"
-            test -f "target/site/allure-maven-plugin/index.html" && echo "✓ index.html exists" || echo "✗ index.html missing"
+            if [ -f "target/site/allure-maven-plugin/index.html" ]; then
+              echo "✓ index.html exists"
+            else
+              echo "✗ index.html missing"
+            fi
           else
             echo "✗ Allure report not generated"
-            exit 0  # Не прерываем workflow, даже если отчет не создан
-          end
+          fi
         if: always()
 
       - name: Deploy to GitHub Pages
