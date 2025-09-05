@@ -9,7 +9,6 @@ on:
 jobs:
   test-and-report:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -22,51 +21,39 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Create config.properties
-        run: |
-          mkdir -p src/test/resources
-          cat > src/test/resources/config.properties << EOF
-          username=standard_user
-          password=secret_sauce
-          base.url=https://www.saucedemo.com
-          EOF
-          echo "Config file created:"
-          cat src/test/resources/config.properties
+      - name: Run tests
+        run: mvn clean test
 
-      - name: Run tests with Allure
+      - name: Install Allure CLI
         run: |
-          mvn clean test -Dallure.results.directory=target/allure-results
-          echo "Tests completed"
+          sudo apt-get update
+          sudo apt-get install -y allure
 
-      - name: Verify Allure results
+      - name: Generate Allure report
         run: |
-          echo "=== Allure results verification ==="
-          if [ -d "target/allure-results" ]; then
-            echo "Allure results directory exists"
-            echo "Number of files: $(find target/allure-results -type f | wc -l)"
-            echo "JSON files: $(find target/allure-results -name "*.json" | wc -l)"
-            find target/allure-results -name "*.json" | head -2 | xargs -I {} sh -c 'echo "=== {} ==="; head -5 {}; echo ""'
-          else
-            echo "ERROR: allure-results directory not found!"
+          allure generate target/allure-results -o allure-report --clean
+          
+          # Проверяем что отчет создан
+          if [ ! -f "allure-report/index.html" ]; then
+            echo "ERROR: Report generation failed"
+            echo "Contents of allure-results:"
+            find target/allure-results -type f | head -10
             exit 1
-          end
-        if: always()
+          fi
+          echo "Report generated successfully"
 
-      - name: Generate Allure Report
-        if: always()
+      - name: Verify report structure
         run: |
-          mvn allure:report
-          echo "Allure report generated at: target/site/allure-maven-plugin"
-
-      - name: List report files
-        run: |
-          find target/site/allure-maven-plugin -type f | head -10
-        if: always()
+          echo "=== Report structure ==="
+          ls -la allure-report/
+          echo "=== index.html exists ==="
+          test -f allure-report/index.html && echo "✓ index.html found" || echo "✗ index.html missing"
+          echo "=== Static files ==="
+          find allure-report/ -name "*.js" -o -name "*.css" | head -5
 
       - name: Deploy to GitHub Pages
-        if: success() || failure()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: target/site/allure-maven-plugint
+          publish_dir: allure-report
