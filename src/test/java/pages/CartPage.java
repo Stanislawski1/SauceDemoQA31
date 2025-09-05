@@ -5,6 +5,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +15,19 @@ public class CartPage extends BasePage {
     private static final Logger logger = LoggerFactory.getLogger(CartPage.class);
 
     @FindBy(id = "checkout")
-    private WebElement CHECKOUT;
+    public WebElement CHECKOUT;
     @FindBy(id = "continue-shopping")
-    private WebElement CONTINUE_SHOPPING_BUTTON;
+    public WebElement CONTINUE_SHOPPING_BUTTON;
     @FindBy(className ="title" )
-    private WebElement TITLE;
+    public WebElement TITLE;
 
     public CartPage(WebDriver driver) {
         super(driver);
+        initElements();
+    }
+
+    private void initElements() {
+        PageFactory.initElements(driver, this);
     }
 
     public CartPage open() {
@@ -31,7 +38,9 @@ public class CartPage extends BasePage {
 
     public CheckoutPage checkout() {
         logger.info("Нажатие на кнопку оплаты");
-        CHECKOUT.click();
+        initElements();
+        WebElement checkoutButton = wait.until(ExpectedConditions.elementToBeClickable(CHECKOUT));
+        checkoutButton.click();
         return new CheckoutPage(driver);
     }
 
@@ -47,9 +56,8 @@ public class CartPage extends BasePage {
         return new ProductsPage(driver);
     }
 
-    public CartPage getTitle() {
-        TITLE.click();
-        return this;
+    public String getTitle() {
+        return TITLE.getText();
     }
 
     public boolean isItemDisplayed(String itemId) {

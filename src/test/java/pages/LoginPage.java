@@ -37,8 +37,8 @@ public class LoginPage extends BasePage {
 
     @Step("Вход в магазин с именем '{user}' и паролем '{password}'")
     public ProductsPage login(String user, String password) {
-        wait.until(ExpectedConditions.visibilityOf(USERNAME_INPUT));
         logger.debug("Ввод username: {}", user);
+        wait.until(ExpectedConditions.visibilityOf(USERNAME_INPUT));
         USERNAME_INPUT.sendKeys(user);
         wait.until(ExpectedConditions.visibilityOf(PASSWORD));
         logger.debug("Ввод password: {}", password);

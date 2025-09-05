@@ -27,6 +27,7 @@ public class CheckOutStep {
 
     public void isOpened() {
         logger.info("Проверка открытия страницы оплаты");
+        productsPage.open();
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.open()
                 .checkout();
