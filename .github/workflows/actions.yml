@@ -7,45 +7,66 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  test-and-report:
     runs-on: ubuntu-latest
-
-    env:
-      USER: ${{secrets.SD_USER}}
-      PASSWORD: ${{secrets.SD_PASSWORD}}
+    timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Run tests
-      run: mvn clean test -Duser=$USER -Dpassword=$PASSWORD
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: List Allure results
-      run: |
-        echo "Allure results directory:"
-        ls -la target/allure-results/ || true
-        echo "Number of files:"
-        find target/allure-results/ -name "*.json" -o -name "*.txt" | wc -l || true
-      if: always()
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
 
-    - name: Generate Allure Report
-      uses: simple-elf/allure-report-action@v1.7
-      if: always()
-      with:
-          allure_results: target/allure-results
-          allure_report: allure-report
-          keep_history: true
+      - name: Create config.properties
+        run: |
+          mkdir -p src/test/resources
+          cat > src/test/resources/config.properties << EOF
+          username=standard_user
+          password=secret_sauce
+          base.url=https://www.saucedemo.com
+          EOF
+          echo "Config file created:"
+          cat src/test/resources/config.properties
 
-    - name: Deploy report to GitHub Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
+      - name: Run tests with Allure
+        run: |
+          mvn clean test -Dallure.results.directory=target/allure-results
+          echo "Tests completed"
+
+      - name: Verify Allure results
+        run: |
+          echo "=== Allure results verification ==="
+          if [ -d "target/allure-results" ]; then
+            echo "Allure results directory exists"
+            echo "Number of files: $(find target/allure-results -type f | wc -l)"
+            echo "JSON files: $(find target/allure-results -name "*.json" | wc -l)"
+            find target/allure-results -name "*.json" | head -2 | xargs -I {} sh -c 'echo "=== {} ==="; head -5 {}; echo ""'
+          else
+            echo "ERROR: allure-results directory not found!"
+            exit 1
+          end
+        if: always()
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mvn allure:report
+          echo "Allure report generated at: target/site/allure-maven-plugin"
+
+      - name: List report files
+        run: |
+          find target/site/allure-maven-plugin -type f | head -10
+        if: always()
+
+      - name: Deploy to GitHub Pages
+        if: success() || failure()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-report
+          publish_dir: target/site/allure-maven-plugint
