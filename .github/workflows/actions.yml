@@ -21,39 +21,36 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run tests
+      - name: Create config.properties
+        run: |
+          mkdir -p src/test/resources
+          cat > src/test/resources/config.properties << EOF
+          username=standard_user
+          password=secret_sauce
+          base.url=https://www.saucedemo.com
+          EOF
+
+      - name: Run tests with Allure
         run: mvn clean test
 
-      - name: Install Allure CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y allure
+      - name: Generate Allure report with Maven
+        run: mvn allure:report
 
-      - name: Generate Allure report
+      - name: Verify report generation
         run: |
-          allure generate target/allure-results -o allure-report --clean
-          
-          # Проверяем что отчет создан
-          if [ ! -f "allure-report/index.html" ]; then
-            echo "ERROR: Report generation failed"
-            echo "Contents of allure-results:"
-            find target/allure-results -type f | head -10
+          echo "=== Checking Maven report ==="
+          if [ -d "target/site/allure-maven-plugin" ]; then
+            echo "✓ Allure report generated"
+            echo "Files found: $(find target/site/allure-maven-plugin -type f | wc -l)"
+            test -f "target/site/allure-maven-plugin/index.html" && echo "✓ index.html exists" || echo "✗ index.html missing"
+          else
+            echo "✗ Allure report not generated"
             exit 1
-          fi
-          echo "Report generated successfully"
-
-      - name: Verify report structure
-        run: |
-          echo "=== Report structure ==="
-          ls -la allure-report/
-          echo "=== index.html exists ==="
-          test -f allure-report/index.html && echo "✓ index.html found" || echo "✗ index.html missing"
-          echo "=== Static files ==="
-          find allure-report/ -name "*.js" -o -name "*.css" | head -5
+          end
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-report
+          publish_dir: target/site/allure-maven-plugin
