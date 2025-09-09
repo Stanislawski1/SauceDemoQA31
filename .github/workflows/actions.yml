@@ -24,63 +24,30 @@ jobs:
       - name: Create config.properties
         run: |
           mkdir -p src/test/resources
-          cat > src/test/resources/config.properties << EOF
-          username=standard_user
-          password=secret_sauce
-          base.url=https://www.saucedemo.com
-          EOF
+          echo "username=standard_user" > src/test/resources/config.properties
+          echo "password=secret_sauce" >> src/test/resources/config.properties
+          echo "base.url=https://www.saucedemo.com" >> src/test/resources/config.properties
 
       - name: Run tests with Allure
-        run: |
-          # Запускаем тесты с явным указанием агента Allure
-          mvn clean test -Dmaven.test.failure.ignore=true \
-            -DargLine="-javaagent:./aspectjweaver-1.9.20.jar"
+        run: mvn clean test -Dmaven.test.failure.ignore=true
 
-      - name: Download AspectJ weaver
+      - name: Check what's in target directory
         run: |
-          # Скачиваем aspectjweaver явно
-          wget -O aspectjweaver-1.9.20.jar \
-            https://repo1.maven.org/maven2/org/aspectj/aspectjweaver/1.9.20/aspectjweaver-1.9.20.jar
+          echo "=== Contents of target/ ==="
+          ls -la target/
+          echo "=== Subdirectories ==="
+          find target/ -maxdepth 1 -type d | head -10
 
-      - name: Verify Allure results
+      - name: Find Allure report directory
         run: |
-          echo "=== Allure results ==="
-          ls -la target/allure-results/ || echo "No allure-results directory"
-          find target/allure-results/ -name "*.json" | head -5 || echo "No JSON files found"
-          echo "Total files: $(find target/allure-results/ -type f 2>/dev/null | wc -l || echo 0)"
-
-      - name: Generate Allure report
-        run: |
-          # Генерируем отчет через Maven
-          mvn allure:report
-          echo "=== Report directory ==="
-          ls -la target/site/allure-maven-plugin/ || echo "No report directory"
-
-      - name: Create index.html if missing
-        run: |
-          if [ ! -f "target/site/allure-maven-plugin/index.html" ]; then
-            echo "Creating fallback index.html..."
-            mkdir -p target/site/allure-maven-plugin
-            cat > target/site/allure-maven-plugin/index.html << EOF
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Allure Report</title>
-            </head>
-            <body>
-                <h1>Allure Test Report</h1>
-                <p>Generated: $(date)</p>
-                <p>Tests were executed. Check workflow logs for details.</p>
-            </body>
-            </html>
-            EOF
-          fi
-        if: always()
+          echo "=== Searching for Allure report ==="
+          find target/ -name "index.html" -type f | head -5
+          find target/ -name "allure*" -type d | head -5
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: target/site/allure-maven-plugin
+          publish_dir: target  # Или правильный путь, который найдем выше
         if: always()
