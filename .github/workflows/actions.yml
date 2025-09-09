@@ -31,18 +31,15 @@ jobs:
       - name: Run tests
         run: mvn clean test -Dmaven.test.failure.ignore=true
 
-      - name: Generate Allure report
+      - name: Generate report
         run: |
-          # Создаем отчет вручную
           mkdir -p allure-report
           echo '<!DOCTYPE html>' > allure-report/index.html
           echo '<html>' >> allure-report/index.html
-          echo '<head>' >> allure-report/index.html
-          echo '    <title>Allure Report</title>' >> allure-report/index.html
-          echo '</head>' >> allure-report/index.html
+          echo '<head><title>Test Report</title></head>' >> allure-report/index.html
           echo '<body>' >> allure-report/index.html
-          echo '    <h1>Allure Test Report</h1>' >> allure-report/index.html
-          echo '    <p>Tests executed: $(date)</p>' >> allure-report/index.html
+          echo '<h1>Test Report</h1>' >> allure-report/index.html
+          echo '<p>Tests completed</p>' >> allure-report/index.html
           echo '</body>' >> allure-report/index.html
           echo '</html>' >> allure-report/index.html
 
