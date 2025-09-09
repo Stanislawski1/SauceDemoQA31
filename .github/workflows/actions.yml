@@ -21,6 +21,15 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Install Allure CLI
+        run: |
+          # Устанавливаем Allure CLI
+          sudo apt-get update
+          wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
+          tar -zxvf allure-2.24.0.tgz
+          sudo cp -r allure-2.24.0/* /usr/local/bin/
+          allure --version
+
       - name: Create config.properties
         run: |
           mkdir -p src/test/resources
@@ -28,20 +37,14 @@ jobs:
           echo "password=secret_sauce" >> src/test/resources/config.properties
           echo "base.url=https://www.saucedemo.com" >> src/test/resources/config.properties
 
-      - name: Run tests
+      - name: Run tests with Allure
         run: mvn clean test -Dmaven.test.failure.ignore=true
 
-      - name: Generate report
+      - name: Generate Allure report
         run: |
-          mkdir -p allure-report
-          echo '<!DOCTYPE html>' > allure-report/index.html
-          echo '<html>' >> allure-report/index.html
-          echo '<head><title>Test Report</title></head>' >> allure-report/index.html
-          echo '<body>' >> allure-report/index.html
-          echo '<h1>Test Report</h1>' >> allure-report/index.html
-          echo '<p>Tests completed</p>' >> allure-report/index.html
-          echo '</body>' >> allure-report/index.html
-          echo '</html>' >> allure-report/index.html
+          # Генерируем полноценный Allure отчет
+          allure generate target/allure-results -o allure-report --clean
+          echo "Allure report generated"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
